@@ -3,32 +3,32 @@ import Validator from "../../domain/validator";
 
 class QuoteController {
 
-    index(): string {
-        return BotTextService.retrieveAll();
+    async index(): Promise<string> {
+        return await BotTextService.retrieveAll();
     }
 
-    quote(): string {
-        return BotTextService.quote();
+    async quote(): Promise<string> {
+        return await BotTextService.quote();
     }
 
-    create(phrase: string): string {
+    async create(phrase: string): Promise<string> {
         if (Validator.isEmpty(phrase)) {
             return 'Uso correto: /add [frase]';
         }
 
-        return BotTextService.save(phrase);
+        return await BotTextService.save(phrase);
     }
 
-    delete(index: string): string {
-        if (Validator.isEmpty(index)) {
+    async delete(uuid: string): Promise<string> {
+        if (Validator.isEmpty(uuid)) {
             return 'Uso correto: /remove [indice do item]';
         }
 
         try {
-            return BotTextService.delete(parseInt(index));
+            return await BotTextService.delete(uuid);
         } catch (e) {
             console.error(e);
-            return `Indice informado é invalido: ${index}`;
+            return `Indice informado é invalido: ${uuid}`;
         }
     }
 

@@ -12,23 +12,31 @@ class BotTextRouter {
 
         switch (botMessage.command) {
             case BotCommand.LIST: {
-                const answer = QuoteController.index();
-                message.reply(answer);
+                QuoteController.index()
+                    .then(answer => {
+                        message.reply(answer);
+                    });
                 break;
             }
             case BotCommand.ADD: {
-                const answer = QuoteController.create(botMessage.body);
-                message.reply(answer);
+                QuoteController.create(botMessage.body)
+                    .then(answer => {
+                        message.reply(answer);
+                    });
                 break;
             }
             case BotCommand.QUOTE: {
-                const answer = QuoteController.quote();
-                message.reply(answer!);
+                QuoteController.quote()
+                    .then(answer => {
+                        message.reply(answer);
+                    });
                 break;
             }
             case BotCommand.REMOVE: {
-                const answer = QuoteController.delete(botMessage.body);
-                message.reply(answer);
+                QuoteController.delete(botMessage.body)
+                    .then(answer => {
+                        message.reply(answer);
+                    });
                 break;
             }
             default: {

@@ -1,10 +1,10 @@
 import { Message } from "discord.js";
+import QuoteRepository from "../../infrastructrure/database/quote";
 import getRandomPhrase from "./phrases";
 import BotMessage, { BotCommand } from "./bot-message.interface";
+import { Quote } from "../definitions/quote.interface";
 
 class BotText {
-
-    private phrases: Array<string> = [];
 
     toBotMessageFrom(message: Message): BotMessage {
         const args = message.content.split(' ');
@@ -14,39 +14,42 @@ class BotText {
         return { command, body };
     }
 
-    retrieveAll(): string {
-        if (this.phrases.length === 0)
+    async retrieveAll(): Promise<string> {
+        const quotes = await QuoteRepository.retrieveAll();
+
+        if (quotes.length === 0)
             return `Tem nenhuma frase não ${getRandomPhrase()}`;
 
         const formattedList: Array<string> = [];
         formattedList.push(`Ta na mão ${getRandomPhrase()}\n`);
 
-        this.phrases.forEach((value, index) => {
-            formattedList.push(`${index + 1} - ${value}\n`);
+        quotes.forEach(quote => {
+            formattedList.push(`${quote.uuid} - ${quote.quote}\n`);
         });
-        
+
         return formattedList.join('');
     }
 
-    quote(): string {
-        if (this.phrases.length === 0)
+    async quote(): Promise<string> {
+        const quotes = await QuoteRepository.retrieveAll();
+        if (quotes.length === 0)
             return `Tem nenhuma frase não ${getRandomPhrase()}`;
 
-        return `${this.phrases[Math.floor(Math.random() * this.phrases.length)]}`;
+        return `${quotes[Math.floor(Math.random() * quotes.length)]}`;
     }
 
-    save(phrase: string): string {
+    async save(phrase: string): Promise<string> {
         try {
-            this.phrases.push(phrase);
+            await QuoteRepository.save({ quote: phrase } as Quote);
             return `Anotado ${getRandomPhrase()}!`;
         } catch (e) {
             return `Não deu pra adicionar não ${getRandomPhrase()}!`;
         }
     }
 
-    delete(index: number): string {
+    async delete(uuid: string): Promise<string> {
         try {
-            this.phrases.splice(index - 1, 1);
+            await QuoteRepository.deleteBy(uuid);
             return `Removido ${getRandomPhrase()}!`;
         } catch (e) {
             return `Não deu pra remover não ${getRandomPhrase()}!`;
