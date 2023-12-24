@@ -1,5 +1,5 @@
 import { Message } from "discord.js";
-import getRandomPhrase from "../../shared/phrases";
+import getRandomPhrase from "./phrases";
 import BotMessage, { BotCommand } from "./bot-message.interface";
 
 class BotText {

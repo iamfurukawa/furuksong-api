@@ -1,5 +1,5 @@
-import BotTextService from "../services/bot-text/bot-text.service";
-import Validator from "../shared/validator";
+import BotTextService from "../../domain/quote/quote.service";
+import Validator from "../../domain/validator";
 
 class QuoteController {
 

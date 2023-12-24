@@ -24,7 +24,7 @@ class VoiceManager {
 
     constructor() {
         this.disconnectTimeout = setTimeout(() => {}, 1);
-        this.timeout = parseInt(process.env.DISCONNECT_IN_MINUTES || '5') * 1000;
+        this.timeout = parseInt(process.env.DISCONNECT_IN_MINUTES || '5') * 60000;
     }
 
     play(audioUrl: string, voiceChannel: VoiceChannel) {

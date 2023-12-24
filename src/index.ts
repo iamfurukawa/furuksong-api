@@ -3,23 +3,31 @@ import { Message } from 'discord.js';
 import cors from 'cors';
 import "dotenv/config";
 
-import DiscordClient from './discord/client';
+import { CREATE_MESSAGE, READY } from './domain/constants';
 
-import routes from './routes';
-import BotTextRouter from './services/bot-text/bot-text.router';
+import DiscordClient from './infrastructrure/bot/discord/client';
 
-import { CREATE_MESSAGE, READY } from './shared/constants';
+import Token from './domain/authentication/token.interface';
+
+import routes from './application/routes';
+import BotTextRouter from './domain/quote/bot-quote.router';
+import ErrorMiddleware from './application/middlewares/error.middleware';
+
+declare global {
+    namespace Express {
+      interface Request {
+        token?: Token;
+      }
+    }
+  }
+  
 
 const port = process.env.PORT || 3000;
 const app = express();
 app.use(cors());
+app.use(express.json());
 app.use(routes);
-app.use(
-    (error: Error, _: Request, response: Response, __: NextFunction) => {
-        console.error(error);
-        response.status(500).json({ error: error.message });
-    }
-);
+app.use(ErrorMiddleware);
 
 DiscordClient.Client.once(READY, () => {
     console.log(`Bot logged as ${DiscordClient.Client.user?.tag}`);

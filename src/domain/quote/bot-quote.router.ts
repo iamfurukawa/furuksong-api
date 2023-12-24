@@ -2,8 +2,8 @@ import { Message } from "discord.js";
 
 import { BotCommand } from "./bot-message.interface";
 
-import QuoteController from "../../controllers/quote.controller";
-import BotTextService from "./bot-text.service";
+import QuoteController from "../../application/controllers/quote.controller";
+import BotTextService from "./quote.service";
 
 class BotTextRouter {
 
